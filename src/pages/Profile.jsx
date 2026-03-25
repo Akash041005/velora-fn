@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Profile.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 function Profile() {
-  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [preferences, setPreferences] = useState(null);
   const [editing, setEditing] = useState(false);
@@ -18,7 +16,6 @@ function Profile() {
     bio: '',
     age: '',
     location: '',
-    interests: [],
   });
 
   useEffect(() => {
@@ -26,8 +23,9 @@ function Profile() {
     const prefsData = localStorage.getItem('userPreferences');
     
     if (userData) {
-      setUser(JSON.parse(userData));
-      setFormData(prev => ({ ...prev, name: JSON.parse(userData).name || '' }));
+      const parsedUser = JSON.parse(userData);
+      setUser(parsedUser);
+      setFormData(prev => ({ ...prev, name: parsedUser.name || '' }));
     }
     
     if (prefsData) {
@@ -50,7 +48,6 @@ function Profile() {
       setUser(updatedUser);
       setEditing(false);
     } catch (err) {
-      console.error('Failed to save profile:', err);
       localStorage.setItem('user', JSON.stringify({ ...user, ...formData }));
       setUser({ ...user, ...formData });
       setEditing(false);
@@ -59,34 +56,15 @@ function Profile() {
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    localStorage.removeItem('userPreferences');
-    navigate('/');
-  };
-
   return (
     <div className="profile-page">
       <div className="profile-bg">
+        <div className="bg-gradient"></div>
         <div className="bg-orb bg-orb-1"></div>
         <div className="bg-orb bg-orb-2"></div>
       </div>
 
       <div className="profile-container">
-        <header className="profile-header">
-          <button className="back-btn" onClick={() => navigate('/home')}>
-            ← Back
-          </button>
-          <h1>Profile</h1>
-          <button 
-            className="edit-btn" 
-            onClick={() => editing ? handleSave() : setEditing(true)}
-          >
-            {editing ? 'Save' : 'Edit'}
-          </button>
-        </header>
-
         <motion.div 
           className="profile-card"
           initial={{ opacity: 0, y: 20 }}
@@ -96,9 +74,7 @@ function Profile() {
             <div className="avatar">
               <span>💖</span>
             </div>
-            {editing && (
-              <button className="change-photo-btn">Change Photo</button>
-            )}
+            <div className="premium-badge">✨ Premium</div>
           </div>
 
           <div className="profile-fields">
@@ -109,6 +85,7 @@ function Profile() {
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  placeholder="Your name"
                 />
               ) : (
                 <p>{user?.name || 'Not set'}</p>
@@ -122,7 +99,7 @@ function Profile() {
                   type="number"
                   value={formData.age}
                   onChange={(e) => setFormData({ ...formData, age: e.target.value })}
-                  placeholder="Enter your age"
+                  placeholder="Your age"
                 />
               ) : (
                 <p>{formData.age || 'Not set'}</p>
@@ -149,14 +126,22 @@ function Profile() {
                 <textarea
                   value={formData.bio}
                   onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-                  placeholder="Tell us about yourself..."
-                  rows={4}
+                  placeholder="Tell about yourself..."
+                  rows={3}
                 />
               ) : (
                 <p>{formData.bio || 'No bio yet'}</p>
               )}
             </div>
           </div>
+
+          <button 
+            className={`edit-profile-btn ${editing ? 'saving' : ''}`}
+            onClick={() => editing ? handleSave() : setEditing(true)}
+            disabled={loading}
+          >
+            {loading ? 'Saving...' : editing ? 'Save Changes' : 'Edit Profile'}
+          </button>
         </motion.div>
 
         <motion.div 
@@ -165,26 +150,40 @@ function Profile() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <h2>Preferences</h2>
+          <h2>My Preferences</h2>
           <div className="preference-items">
             <div className="pref-item">
-              <span className="pref-label">I am a</span>
+              <span className="pref-label">I am</span>
               <span className="pref-value">{preferences?.gender || 'Not set'}</span>
             </div>
             <div className="pref-item">
-              <span className="pref-label">Interested in</span>
+              <span className="pref-label">Looking for</span>
               <span className="pref-value">{preferences?.interestedIn || 'Not set'}</span>
             </div>
             <div className="pref-item">
-              <span className="pref-label">AI Vibe</span>
+              <span className="pref-label">Vibe</span>
               <span className="pref-value">{preferences?.style || 'Not set'}</span>
             </div>
           </div>
         </motion.div>
 
-        <button className="logout-btn" onClick={handleLogout}>
-          Logout
-        </button>
+        <div className="profile-stats">
+          <div className="stat-card">
+            <span className="stat-icon">💬</span>
+            <span className="stat-value">∞</span>
+            <span className="stat-label">Messages</span>
+          </div>
+          <div className="stat-card">
+            <span className="stat-icon">💕</span>
+            <span className="stat-value">1</span>
+            <span className="stat-label">Match</span>
+          </div>
+          <div className="stat-card">
+            <span className="stat-icon">✨</span>
+            <span className="stat-value">∞</span>
+            <span className="stat-label">Super Likes</span>
+          </div>
+        </div>
       </div>
     </div>
   );

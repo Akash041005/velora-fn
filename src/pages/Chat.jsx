@@ -12,6 +12,7 @@ function Chat() {
   const [isTyping, setIsTyping] = useState(false);
   const [token, setToken] = useState(null);
   const messagesEndRef = useRef(null);
+  const inputRef = useRef(null);
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
@@ -35,7 +36,7 @@ function Chat() {
       } else {
         setMessages([{
           id: 1,
-          content: "Hey there! 💕 I'm Velora, your AI companion. I'm so happy you're here! Tell me about yourself - what's on your mind?",
+          content: "Hey there, handsome! 💕 I'm Velora. I can't wait to get to know you better! Tell me something about yourself?",
           sender: 'ai',
           timestamp: new Date(),
         }]);
@@ -43,7 +44,7 @@ function Chat() {
     } catch (err) {
       setMessages([{
         id: 1,
-        content: "Hey there! 💕 I'm Velora, your AI companion. I'm so happy you're here! Tell me about yourself - what's on your mind?",
+        content: "Hey there, handsome! 💕 I'm Velora. I can't wait to get to know you better! Tell me something about yourself?",
         sender: 'ai',
         timestamp: new Date(),
       }]);
@@ -84,32 +85,32 @@ function Chat() {
       setMessages(prev => [...prev, fallbackMessage]);
     } finally {
       setIsTyping(false);
+      setTimeout(() => inputRef.current?.focus(), 100);
     }
   };
 
   return (
-    <div className="chat-screen">
-      <div className="chat-partner-info">
-        <div className="partner-avatar">
+    <div className="chat-container">
+      <div className="velora-header">
+        <div className="velora-avatar">
           <span>💖</span>
+          <div className="online-badge"></div>
         </div>
-        <div className="partner-details">
+        <div className="velora-info">
           <h3>Velora</h3>
-          <span className="status online">
-            <span className="status-dot"></span>
-            Online
-          </span>
+          <span className="velora-status">Online • Your AI Girlfriend</span>
         </div>
       </div>
 
-      <div className="messages-area">
+      <div className="chat-messages" ref={messagesEndRef}>
         <AnimatePresence>
           {messages.map((msg, index) => (
             <motion.div
               key={msg.id}
-              initial={{ opacity: 0, y: 20, scale: 0.95 }}
+              initial={{ opacity: 0, y: 20, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.3, delay: index * 0.05 }}
+              transition={{ duration: 0.3, type: 'spring', damping: 25 }}
+              className={msg.sender === 'user' ? 'user-message-wrapper' : 'ai-message-wrapper'}
             >
               <MessageBubble message={msg} />
             </motion.div>
@@ -118,12 +119,11 @@ function Chat() {
 
         {isTyping && (
           <motion.div
-            className="typing-indicator"
+            className="ai-message-wrapper"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            <div className="typing-content">
-              <span>Velora is typing</span>
+            <div className="typing-bubble">
               <div className="typing-dots">
                 <span></span>
                 <span></span>
@@ -132,20 +132,28 @@ function Chat() {
             </div>
           </motion.div>
         )}
-
-        <div ref={messagesEndRef} />
+        
+        <div ref={messagesEndRef} style={{ height: 1 }} />
       </div>
 
-      <form className="chat-input-area" onSubmit={handleSend}>
+      <form className="message-input-form" onSubmit={handleSend}>
         <input
+          ref={inputRef}
           type="text"
-          placeholder="Message Velora..."
+          placeholder="Type something sweet..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          autoComplete="off"
+          autoCorrect="on"
+          autoCapitalize="sentences"
         />
-        <button type="submit" disabled={!input.trim() || isTyping}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+        <button 
+          type="submit" 
+          disabled={!input.trim() || isTyping}
+          className="send-btn"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <path d="M12 19V5M5 12l7-7 7 7"/>
           </svg>
         </button>
       </form>

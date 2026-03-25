@@ -10,20 +10,18 @@ const genders = [
   { id: 'woman', label: 'Woman', emoji: '👩' },
   { id: 'man', label: 'Man', emoji: '👨' },
   { id: 'non-binary', label: 'Non-binary', emoji: '🧑' },
-  { id: 'lesbian', label: 'Lesbian', emoji: '💜' },
 ];
 
 const interests = [
   { id: 'male', label: 'Male', emoji: '👨' },
   { id: 'female', label: 'Female', emoji: '👩' },
-  { id: 'non-binary', label: 'Non-binary', emoji: '🧑' },
   { id: 'everyone', label: 'Everyone', emoji: '🌈' },
 ];
 
 const styles = [
-  { id: 'friendly', label: 'Friendly', emoji: '🤗', desc: 'Warm & approachable' },
-  { id: 'romantic', label: 'Romantic', emoji: '💕', desc: 'Affectionate & caring' },
-  { id: 'flirty', label: 'Flirty', emoji: '😘', desc: 'Playful & exciting' },
+  { id: 'friendly', label: 'Friendly', emoji: '🤗', desc: 'Warm & caring' },
+  { id: 'romantic', label: 'Romantic', emoji: '💕', desc: 'Sweet & loving' },
+  { id: 'flirty', label: 'Flirty', emoji: '😘', desc: 'Fun & playful' },
 ];
 
 function Onboarding() {
@@ -46,7 +44,6 @@ function Onboarding() {
     } else {
       setLoading(true);
       try {
-        const user = JSON.parse(localStorage.getItem('user'));
         const token = localStorage.getItem('token');
         
         await axios.put(
@@ -58,7 +55,6 @@ function Onboarding() {
         localStorage.setItem('userPreferences', JSON.stringify(preferences));
         navigate('/home');
       } catch (err) {
-        console.error('Failed to save preferences:', err);
         localStorage.setItem('userPreferences', JSON.stringify(preferences));
         navigate('/home');
       } finally {
@@ -75,9 +71,9 @@ function Onboarding() {
   };
 
   const steps = [
-    { title: 'How do you identify?', subtitle: 'This helps us personalize your experience' },
-    { title: "Who's your type?", subtitle: "Tell us who you're interested in" },
-    { title: 'Your vibe', subtitle: 'How would you like your AI companion to act?' },
+    { title: 'I am a...', subtitle: 'Help us find your perfect match' },
+    { title: 'Looking for...', subtitle: "Who's your type?" },
+    { title: 'My vibe', subtitle: 'How should Velora act with you?' },
   ];
 
   const options = step === 0 ? genders : step === 1 ? interests : styles;
@@ -86,14 +82,24 @@ function Onboarding() {
   return (
     <div className="onboarding-page">
       <div className="onboarding-bg">
+        <div className="bg-gradient"></div>
         <div className="bg-orb bg-orb-1"></div>
         <div className="bg-orb bg-orb-2"></div>
       </div>
 
       <div className="onboarding-container">
+        <div className="onboarding-logo">
+          <span className="logo-emoji">💕</span>
+          <span className="logo-text">Velora</span>
+        </div>
+
         <div className="progress-dots">
           {[0, 1, 2].map(i => (
-            <div key={i} className={`dot ${i <= step ? 'active' : ''}`} />
+            <motion.div 
+              key={i} 
+              className={`dot ${i <= step ? 'active' : ''}`}
+              animate={{ scale: i <= step ? 1 : 0.8 }}
+            />
           ))}
         </div>
 
@@ -101,9 +107,9 @@ function Onboarding() {
           <motion.div
             key={step}
             className="step-content"
-            initial={{ opacity: 0, x: 20 }}
+            initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
+            exit={{ opacity: 0, x: -30 }}
             transition={{ duration: 0.3 }}
           >
             <h1>{steps[step].title}</h1>
@@ -118,8 +124,7 @@ function Onboarding() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                  whileTap={{ scale: 0.95 }}
                 >
                   <span className="option-emoji">{option.emoji}</span>
                   <span className="option-label">{option.label}</span>
@@ -131,17 +136,24 @@ function Onboarding() {
         </AnimatePresence>
 
         <div className="onboarding-footer">
-          <button
+          <motion.button
             className="continue-btn"
             onClick={handleNext}
             disabled={!canProceed() || loading}
+            whileTap={{ scale: 0.98 }}
           >
-            {loading ? 'Saving...' : step === 2 ? 'Start Journey' : 'Continue'}
-            <span className="btn-arrow">→</span>
-          </button>
+            {loading ? (
+              <span className="loading-spinner"></span>
+            ) : (
+              <>
+                {step === 2 ? 'Start Chatting' : 'Continue'}
+                <span className="btn-icon">→</span>
+              </>
+            )}
+          </motion.button>
           
           {step > 0 && (
-            <button className="skip-btn" onClick={() => setStep(step - 1)}>
+            <button className="back-btn" onClick={() => setStep(step - 1)}>
               ← Back
             </button>
           )}

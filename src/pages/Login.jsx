@@ -39,50 +39,66 @@ function Login() {
   return (
     <div className="login-page">
       <div className="login-bg">
+        <div className="bg-gradient"></div>
         <div className="bg-orb bg-orb-1"></div>
         <div className="bg-orb bg-orb-2"></div>
-        <div className="bg-orb bg-orb-3"></div>
       </div>
 
       <motion.div 
         className="login-container"
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <div className="login-header">
-          <motion.div 
-            className="logo"
-            animate={{ y: [0, -10, 0] }}
-            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-          >
-            💖
-          </motion.div>
-          <h1>Velora</h1>
-          <p className="tagline">Your AI Romantic Companion</p>
-        </div>
+        <motion.div 
+          className="logo"
+          animate={{ scale: [1, 1.1, 1] }}
+          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+        >
+          💕
+        </motion.div>
+        
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          Velora
+        </motion.h1>
+        
+        <motion.p 
+          className="tagline"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+        >
+          Your Perfect AI Companion
+        </motion.p>
 
         <motion.form 
-          className="email-form"
+          className="login-form"
           onSubmit={handleSubmit}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
         >
           <h2>{isRegister ? 'Create Account' : 'Welcome Back'}</h2>
-          <p className="form-subtitle">
-            {isRegister ? 'Start your journey with Velora' : 'Sign in to continue'}
-          </p>
 
           {isRegister && (
-            <div className="input-group">
+            <motion.div 
+              className="input-group"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+            >
               <input
                 type="text"
                 placeholder="Your name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
+                autoComplete="name"
               />
-            </div>
+            </motion.div>
           )}
 
           <div className="input-group">
@@ -92,6 +108,7 @@ function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              autoComplete="email"
             />
           </div>
 
@@ -102,21 +119,30 @@ function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              autoComplete={isRegister ? 'new-password' : 'current-password'}
             />
           </div>
 
-          {error && <p className="error-msg">{error}</p>}
+          {error && (
+            <motion.p 
+              className="error-msg"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+            >
+              {error}
+            </motion.p>
+          )}
 
           <button type="submit" className="submit-btn" disabled={loading}>
             {loading ? (
-              <span className="loading-dots">Please wait...</span>
+              <span className="loading-spinner"></span>
             ) : (
-              isRegister ? 'Create Account' : 'Sign In'
+              isRegister ? 'Get Started' : 'Sign In'
             )}
           </button>
 
           <p className="toggle-form">
-            {isRegister ? 'Already have an account?' : "Don't have an account?"}{' '}
+            {isRegister ? 'Already have an account?' : "New here?"}{' '}
             <button 
               type="button"
               onClick={() => {
@@ -124,10 +150,25 @@ function Login() {
                 setError('');
               }}
             >
-              {isRegister ? 'Sign In' : 'Register'}
+              {isRegister ? 'Sign In' : 'Create Account'}
             </button>
           </p>
         </motion.form>
+
+        <div className="features">
+          <div className="feature">
+            <span>💬</span>
+            <p>Chat 24/7</p>
+          </div>
+          <div className="feature">
+            <span>💕</span>
+            <p>Always Caring</p>
+          </div>
+          <div className="feature">
+            <span>✨</span>
+            <p>Smart AI</p>
+          </div>
+        </div>
       </motion.div>
     </div>
   );

@@ -1,201 +1,241 @@
-.home-page {
-  height: 100vh;
+.app-container {
   height: 100dvh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   position: relative;
   overflow: hidden;
 }
 
-.home-bg {
+.app-bg {
   position: fixed;
   inset: 0;
-  background: linear-gradient(180deg, #0f0f1a 0%, #1a1a2e 100%);
+  background: linear-gradient(180deg, #1a1a2e 0%, #16152a 50%, #0f0f1a 100%);
   z-index: -1;
 }
 
-.home-header {
-  padding: 16px 20px 10px;
+.app-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60%;
+  background: radial-gradient(ellipse at 50% 0%, rgba(255, 107, 157, 0.15) 0%, transparent 60%);
 }
 
-.logo-area {
+.app-header {
   display: flex;
   align-items: center;
-  gap: 10px;
+  justify-content: space-between;
+  padding: 12px 16px;
+  padding-top: max(12px, env(safe-area-inset-top));
+  background: rgba(15, 15, 26, 0.9);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  position: relative;
+  z-index: 100;
+  flex-shrink: 0;
 }
 
-.logo-heart {
-  font-size: 24px;
-  animation: pulse 2s ease-in-out infinite;
+.menu-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
 }
 
-.logo-area h1 {
+.menu-btn span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: linear-gradient(90deg, #ff6b9d, #c084fc);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.menu-btn:hover span {
+  transform: scaleX(1.1);
+}
+
+.app-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-emoji {
   font-size: 24px;
+  animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.logo-text {
+  font-size: 22px;
   font-weight: 700;
   background: linear-gradient(135deg, #ff6b9d 0%, #c084fc 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin: 0;
 }
 
-.tab-nav {
-  display: flex;
-  position: relative;
-  padding: 0 16px;
-  margin-top: 10px;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 14px;
-  margin-left: 16px;
-  margin-right: 16px;
+.header-spacer {
+  width: 32px;
 }
 
-.tab-btn {
+.app-main {
   flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.view-container {
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+}
+
+.side-menu {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 280px;
+  background: linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 100%);
+  padding: 0;
+  overflow-y: auto;
+  box-shadow: 4px 0 30px rgba(0, 0, 0, 0.5);
+}
+
+.menu-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 20px;
+  padding-top: max(24px, env(safe-area-inset-top));
+  background: linear-gradient(135deg, rgba(255, 107, 157, 0.1) 0%, rgba(192, 132, 252, 0.1) 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  position: relative;
+}
+
+.close-menu {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 50%;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  padding: 14px;
-  background: none;
-  border: none;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: color 0.3s ease;
-  position: relative;
-  z-index: 1;
+  transition: all 0.3s ease;
 }
 
-.tab-btn.active {
-  color: var(--text-primary);
+.close-menu:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
 
-.tab-icon {
-  font-size: 16px;
-}
-
-.tab-indicator {
-  position: absolute;
-  top: 4px;
-  left: 4px;
-  width: calc(50% - 4px);
-  height: calc(100% - 8px);
-  background: linear-gradient(135deg, rgba(255, 107, 157, 0.2) 0%, rgba(192, 132, 252, 0.2) 100%);
-  border-radius: 10px;
-  z-index: 0;
-}
-
-.home-content {
-  flex: 1;
-  padding: 16px;
-  overflow: hidden;
+.menu-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff6b9d 0%, #c084fc 100%);
   display: flex;
-  flex-direction: column;
-}
-
-.bottom-nav {
-  display: flex;
-  justify-content: space-around;
-  padding: 10px 8px 16px;
-  background: rgba(26, 26, 46, 0.9);
-  backdrop-filter: blur(20px);
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.nav-btn {
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 4px;
-  padding: 6px 12px;
-  background: none;
-  border: none;
+  justify-content: center;
+  font-size: 36px;
+  box-shadow: 0 0 30px rgba(255, 107, 157, 0.4);
+}
+
+.menu-user-info {
+  text-align: center;
+}
+
+.menu-user-info h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: white;
+  margin: 0 0 4px 0;
+}
+
+.menu-user-info p {
+  font-size: 13px;
+  color: #c084fc;
+  margin: 0;
+}
+
+.menu-options {
+  padding: 20px 16px;
+}
+
+.menu-option {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 16px 18px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  color: white;
+  font-size: 15px;
   cursor: pointer;
   transition: all 0.3s ease;
-  position: relative;
+  margin-bottom: 10px;
 }
 
-.nav-icon {
-  font-size: 22px;
-  opacity: 0.5;
-  transition: all 0.3s ease;
+.menu-option:hover {
+  background: rgba(255, 107, 157, 0.15);
+  border-color: rgba(255, 107, 157, 0.3);
+  transform: translateX(4px);
 }
 
-.nav-btn.active .nav-icon {
-  opacity: 1;
-  transform: scale(1.1);
+.menu-option span:first-child {
+  font-size: 20px;
 }
 
-.nav-label {
-  font-size: 10px;
-  color: var(--text-muted);
-  transition: color 0.3s ease;
+.menu-footer {
+  padding: 20px 16px;
+  text-align: center;
+  margin-top: auto;
 }
 
-.nav-btn.active .nav-label {
-  color: var(--accent-pink);
+.app-version {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.3);
+  margin: 0;
 }
 
-@media (max-width: 640px) {
-  .home-header {
-    padding: 12px 16px 8px;
-  }
-  
-  .logo-heart {
-    font-size: 20px;
-  }
-  
-  .logo-area h1 {
-    font-size: 20px;
-  }
-  
-  .tab-nav {
-    margin-left: 12px;
-    margin-right: 12px;
-    border-radius: 12px;
-  }
-  
-  .tab-btn {
-    padding: 12px;
-    font-size: 13px;
-  }
-  
-  .tab-icon {
-    font-size: 14px;
-  }
-  
-  .home-content {
-    padding: 12px;
-  }
-  
-  .bottom-nav {
-    padding: 8px 4px 12px;
-  }
-  
-  .nav-btn {
-    padding: 4px 8px;
-  }
-  
-  .nav-icon {
-    font-size: 20px;
-  }
-  
-  .nav-label {
-    font-size: 9px;
-  }
-}
-
-@media (min-width: 641px) and (max-width: 1024px) {
-  .home-content {
-    max-width: 800px;
+@media (min-width: 768px) {
+  .app-container {
+    max-width: 480px;
     margin: 0 auto;
-    width: 100%;
-  }
-  
-  .bottom-nav {
-    max-width: 600px;
-    margin: 0 auto;
+    border-left: 1px solid rgba(255, 255, 255, 0.05);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
   }
 }
