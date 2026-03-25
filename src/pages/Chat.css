@@ -22,7 +22,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
   position: relative;
   box-shadow: 0 0 20px rgba(255, 107, 157, 0.4);
 }
@@ -54,6 +53,19 @@
 .velora-status {
   font-size: 12px;
   color: #4ade80;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.language-badge {
+  background: linear-gradient(135deg, rgba(255, 107, 157, 0.2) 0%, rgba(192, 132, 252, 0.2) 100%);
+  border: 1px solid rgba(192, 132, 252, 0.3);
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  color: #c084fc;
+  text-transform: capitalize;
 }
 
 .chat-messages {
@@ -64,6 +76,40 @@
   flex-direction: column;
   gap: 12px;
   -webkit-overflow-scrolling: touch;
+}
+
+.empty-chat {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.empty-icon {
+  margin-bottom: 16px;
+  animation: heartbeat 1.5s ease-in-out infinite;
+  filter: drop-shadow(0 0 20px rgba(255, 107, 157, 0.4));
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.empty-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: white;
+  margin: 0 0 8px 0;
+}
+
+.empty-subtitle {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0;
 }
 
 .user-message-wrapper {
@@ -153,8 +199,6 @@
   min-height: 48px;
   -webkit-appearance: none;
   appearance: none;
-  -webkit-autofill: none;
-  autofill: none;
 }
 
 .message-input-form input::placeholder {
@@ -201,11 +245,6 @@
   width: 20px;
   height: 20px;
   color: white;
-  transform: rotate(0deg);
-}
-
-.send-btn:not(:disabled):hover svg {
-  transform: translateY(-2px);
 }
 
 @media (max-width: 640px) {
@@ -216,7 +255,6 @@
   .velora-avatar {
     width: 44px;
     height: 44px;
-    font-size: 22px;
   }
   
   .velora-info h3 {
@@ -225,6 +263,23 @@
   
   .velora-status {
     font-size: 11px;
+  }
+  
+  .empty-chat {
+    padding: 30px 16px;
+  }
+  
+  .empty-icon svg {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .empty-title {
+    font-size: 18px;
+  }
+  
+  .empty-subtitle {
+    font-size: 13px;
   }
   
   .chat-messages {

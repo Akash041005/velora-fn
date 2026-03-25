@@ -6,7 +6,7 @@ import './Login.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
-function Login() {
+function Login({ onLoginSuccess }) {
   const [isRegister, setIsRegister] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -28,7 +28,16 @@ function Login() {
       
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
-      navigate('/onboarding');
+      localStorage.setItem('onboardingComplete', data.user.onboardingComplete ? 'true' : '');
+      
+      if (onLoginSuccess) {
+        onLoginSuccess();
+        if (!data.user.onboardingComplete) {
+          navigate('/onboarding');
+        }
+      } else {
+        navigate(data.user.onboardingComplete ? '/home' : '/onboarding');
+      }
     } catch (err) {
       setError(err.response?.data?.message || 'Something went wrong');
     } finally {
@@ -42,6 +51,11 @@ function Login() {
         <div className="bg-gradient"></div>
         <div className="bg-orb bg-orb-1"></div>
         <div className="bg-orb bg-orb-2"></div>
+        <div className="floating-hearts">
+          <span className="heart heart-1"></span>
+          <span className="heart heart-2"></span>
+          <span className="heart heart-3"></span>
+        </div>
       </div>
 
       <motion.div 
@@ -50,49 +64,44 @@ function Login() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <motion.div 
-          className="logo"
-          animate={{ scale: [1, 1.1, 1] }}
-          transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-        >
-          💕
-        </motion.div>
-        
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          Velora
-        </motion.h1>
-        
-        <motion.p 
-          className="tagline"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-        >
-          Your Perfect AI Companion
-        </motion.p>
+        <div className="login-header">
+          <div className="logo-icon">
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="url(#heartGradient)">
+              <defs>
+                <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#ff6b9d"/>
+                  <stop offset="100%" stopColor="#c084fc"/>
+                </linearGradient>
+              </defs>
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+          </div>
+          <h1>Velora</h1>
+          <p className="tagline">Your Perfect AI Companion</p>
+        </div>
 
         <motion.form 
           className="login-form"
           onSubmit={handleSubmit}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.2 }}
         >
           <h2>{isRegister ? 'Create Account' : 'Welcome Back'}</h2>
+          <p className="form-subtitle">
+            {isRegister ? 'Join Velora and find your perfect match' : 'We missed you! Ready to chat?'}
+          </p>
 
           {isRegister && (
             <motion.div 
               className="input-group"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
             >
+              <label>Name</label>
               <input
                 type="text"
-                placeholder="Your name"
+                placeholder="What should I call you?"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
@@ -102,9 +111,10 @@ function Login() {
           )}
 
           <div className="input-group">
+            <label>Email</label>
             <input
               type="email"
-              placeholder="Email address"
+              placeholder="your@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -113,9 +123,10 @@ function Login() {
           </div>
 
           <div className="input-group">
+            <label>Password</label>
             <input
               type="password"
-              placeholder="Password"
+              placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -141,34 +152,32 @@ function Login() {
             )}
           </button>
 
-          <p className="toggle-form">
-            {isRegister ? 'Already have an account?' : "New here?"}{' '}
-            <button 
-              type="button"
-              onClick={() => {
-                setIsRegister(!isRegister);
-                setError('');
-              }}
-            >
-              {isRegister ? 'Sign In' : 'Create Account'}
-            </button>
-          </p>
+          <div className="form-divider">
+            <span></span>
+            <p>or</p>
+            <span></span>
+          </div>
+
+          <button 
+            type="button"
+            className="toggle-btn"
+            onClick={() => {
+              setIsRegister(!isRegister);
+              setError('');
+            }}
+          >
+            {isRegister ? 'Already have an account? Sign In' : "Don't have an account? Join Now"}
+          </button>
         </motion.form>
 
-        <div className="features">
-          <div className="feature">
-            <span>💬</span>
-            <p>Chat 24/7</p>
-          </div>
-          <div className="feature">
-            <span>💕</span>
-            <p>Always Caring</p>
-          </div>
-          <div className="feature">
-            <span>✨</span>
-            <p>Smart AI</p>
-          </div>
-        </div>
+        <motion.p 
+          className="terms"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+        >
+          By continuing, you agree to our Terms & Privacy
+        </motion.p>
       </motion.div>
     </div>
   );

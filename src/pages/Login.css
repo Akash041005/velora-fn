@@ -49,42 +49,76 @@
   50% { transform: translate(20px, -20px); }
 }
 
+.floating-hearts {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.heart {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 107, 157, 0.3);
+  border-radius: 50%;
+  animation: float-up 6s infinite ease-in-out;
+}
+
+.heart-1 { left: 20%; animation-delay: 0s; }
+.heart-2 { left: 50%; animation-delay: 2s; }
+.heart-3 { left: 80%; animation-delay: 4s; }
+
+@keyframes float-up {
+  0% { transform: translateY(100vh) scale(0); opacity: 0; }
+  10% { opacity: 0.5; }
+  90% { opacity: 0.5; }
+  100% { transform: translateY(-100px) scale(1); opacity: 0; }
+}
+
 .login-container {
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 380px;
+  max-width: 400px;
   text-align: center;
 }
 
-.logo {
-  font-size: 64px;
-  margin-bottom: 8px;
+.login-header {
+  margin-bottom: 32px;
+}
+
+.logo-icon {
+  margin-bottom: 12px;
+  animation: heartbeat 1.5s ease-in-out infinite;
   filter: drop-shadow(0 0 20px rgba(255, 107, 157, 0.5));
 }
 
-.login-container h1 {
-  font-size: 42px;
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.08); }
+}
+
+.login-header h1 {
+  font-size: 38px;
   font-weight: 800;
-  background: linear-gradient(135deg, #ff6b9d 0%, #c084fc 50%, #818cf8 100%);
+  background: linear-gradient(135deg, #ff6b9d 0%, #c084fc 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   margin: 0 0 8px 0;
-  letter-spacing: -1px;
+  letter-spacing: -0.5px;
 }
 
 .tagline {
   color: rgba(255, 255, 255, 0.6);
-  font-size: 16px;
-  margin-bottom: 40px;
+  font-size: 15px;
 }
 
 .login-form {
   text-align: left;
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 24px;
   padding: 28px 24px;
 }
@@ -92,21 +126,37 @@
 .login-form h2 {
   font-size: 22px;
   font-weight: 700;
-  margin: 0 0 20px 0;
+  margin: 0 0 4px 0;
   color: white;
+}
+
+.form-subtitle {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 20px;
 }
 
 .input-group {
   margin-bottom: 16px;
 }
 
+.input-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 .input-group input {
   width: 100%;
-  padding: 16px 18px;
+  padding: 14px 16px;
   background: rgba(255, 255, 255, 0.95);
   border: 2px solid transparent;
-  border-radius: 16px;
-  font-size: 16px;
+  border-radius: 14px;
+  font-size: 15px;
   color: #1a1a2e;
   outline: none;
   transition: all 0.3s ease;
@@ -115,7 +165,7 @@
 }
 
 .input-group input::placeholder {
-  color: #888;
+  color: #999;
 }
 
 .input-group input:focus {
@@ -130,21 +180,21 @@
   padding: 10px 14px;
   background: rgba(248, 113, 113, 0.1);
   border-radius: 10px;
+  text-align: center;
 }
 
 .submit-btn {
   width: 100%;
-  padding: 16px;
+  padding: 15px;
   background: linear-gradient(135deg, #ff6b9d 0%, #c084fc 100%);
   border: none;
-  border-radius: 16px;
+  border-radius: 14px;
   font-size: 16px;
   font-weight: 700;
   color: white;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-top: 8px;
-  min-height: 54px;
+  min-height: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -154,10 +204,6 @@
 .submit-btn:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 8px 30px rgba(255, 107, 157, 0.4);
-}
-
-.submit-btn:active:not(:disabled) {
-  transform: translateY(0);
 }
 
 .submit-btn:disabled {
@@ -178,50 +224,47 @@
   to { transform: rotate(360deg); }
 }
 
-.toggle-form {
-  text-align: center;
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.6);
-  margin-top: 20px;
-}
-
-.toggle-form button {
-  background: none;
-  border: none;
-  color: #ff6b9d;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  margin-left: 4px;
-}
-
-.toggle-form button:hover {
-  text-decoration: underline;
-}
-
-.features {
+.form-divider {
   display: flex;
-  justify-content: center;
-  gap: 32px;
-  margin-top: 40px;
-}
-
-.feature {
-  display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+  margin: 20px 0;
 }
 
-.feature span {
-  font-size: 28px;
+.form-divider span {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
 }
 
-.feature p {
+.form-divider p {
+  color: rgba(255, 255, 255, 0.4);
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.5);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.toggle-btn {
+  width: 100%;
+  padding: 14px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 107, 157, 0.3);
+  color: #ff6b9d;
+}
+
+.terms {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.3);
+  margin-top: 20px;
 }
 
 @media (max-width: 640px) {
@@ -229,21 +272,8 @@
     padding: 16px;
   }
   
-  .login-container {
-    max-width: 100%;
-  }
-  
-  .logo {
-    font-size: 56px;
-  }
-  
-  .login-container h1 {
-    font-size: 36px;
-  }
-  
-  .tagline {
-    font-size: 14px;
-    margin-bottom: 32px;
+  .login-header h1 {
+    font-size: 32px;
   }
   
   .login-form {
@@ -253,37 +283,16 @@
   
   .login-form h2 {
     font-size: 20px;
-    margin-bottom: 18px;
-  }
-  
-  .input-group {
-    margin-bottom: 14px;
   }
   
   .input-group input {
-    padding: 14px 16px;
+    padding: 14px 14px;
     font-size: 16px;
-    border-radius: 14px;
-    min-height: 50px;
+    min-height: 48px;
   }
   
   .submit-btn {
     padding: 14px;
-    font-size: 15px;
-    border-radius: 14px;
-    min-height: 50px;
-  }
-  
-  .features {
-    gap: 24px;
-    margin-top: 32px;
-  }
-  
-  .feature span {
-    font-size: 24px;
-  }
-  
-  .feature p {
-    font-size: 10px;
+    min-height: 48px;
   }
 }

@@ -11,6 +11,7 @@ function Chat() {
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [token, setToken] = useState(null);
+  const [currentLang, setCurrentLang] = useState('english');
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
@@ -33,21 +34,9 @@ function Chat() {
       });
       if (data.messages?.length > 0) {
         setMessages(data.messages);
-      } else {
-        setMessages([{
-          id: 1,
-          content: "Hey there, handsome! 💕 I'm Velora. I can't wait to get to know you better! Tell me something about yourself?",
-          sender: 'ai',
-          timestamp: new Date(),
-        }]);
       }
     } catch (err) {
-      setMessages([{
-        id: 1,
-        content: "Hey there, handsome! 💕 I'm Velora. I can't wait to get to know you better! Tell me something about yourself?",
-        sender: 'ai',
-        timestamp: new Date(),
-      }]);
+      console.log('No previous messages');
     }
   };
 
@@ -74,11 +63,14 @@ function Chat() {
       
       if (data.aiMessage) {
         setMessages(prev => [...prev, data.aiMessage]);
+        if (data.aiContext?.language) {
+          setCurrentLang(data.aiContext.language);
+        }
       }
     } catch (err) {
       const fallbackMessage = {
         id: Date.now(),
-        content: "I'm having trouble connecting right now. Please try again! 💕",
+        content: "Hmm, something's not working... Try sending that again?",
         sender: 'ai',
         timestamp: new Date(),
       };
@@ -93,16 +85,39 @@ function Chat() {
     <div className="chat-container">
       <div className="velora-header">
         <div className="velora-avatar">
-          <span>💖</span>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
           <div className="online-badge"></div>
         </div>
         <div className="velora-info">
           <h3>Velora</h3>
-          <span className="velora-status">Online • Your AI Girlfriend</span>
+          <span className="velora-status">
+            <span className="language-badge">{currentLang}</span>
+            Online
+          </span>
         </div>
       </div>
 
       <div className="chat-messages" ref={messagesEndRef}>
+        {messages.length === 0 && (
+          <div className="empty-chat">
+            <div className="empty-icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="url(#heartGradientChat)">
+                <defs>
+                  <linearGradient id="heartGradientChat" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#ff6b9d"/>
+                    <stop offset="100%" stopColor="#c084fc"/>
+                  </linearGradient>
+                </defs>
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
+            </div>
+            <p className="empty-title">Say hello to Velora</p>
+            <p className="empty-subtitle">She is waiting to chat with you</p>
+          </div>
+        )}
+        
         <AnimatePresence>
           {messages.map((msg, index) => (
             <motion.div
@@ -140,7 +155,7 @@ function Chat() {
         <input
           ref={inputRef}
           type="text"
-          placeholder="Type something sweet..."
+          placeholder="Say something sweet..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
           autoComplete="off"

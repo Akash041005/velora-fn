@@ -7,24 +7,24 @@ import './Onboarding.css';
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 const genders = [
-  { id: 'woman', label: 'Woman', emoji: '👩' },
-  { id: 'man', label: 'Man', emoji: '👨' },
-  { id: 'non-binary', label: 'Non-binary', emoji: '🧑' },
+  { id: 'woman', label: 'Woman', icon: 'W' },
+  { id: 'man', label: 'Man', icon: 'M' },
+  { id: 'non-binary', label: 'Non-binary', icon: 'N' },
 ];
 
 const interests = [
-  { id: 'male', label: 'Male', emoji: '👨' },
-  { id: 'female', label: 'Female', emoji: '👩' },
-  { id: 'everyone', label: 'Everyone', emoji: '🌈' },
+  { id: 'male', label: 'Male', icon: 'M' },
+  { id: 'female', label: 'Female', icon: 'F' },
+  { id: 'everyone', label: 'Everyone', icon: 'E' },
 ];
 
 const styles = [
-  { id: 'friendly', label: 'Friendly', emoji: '🤗', desc: 'Warm & caring' },
-  { id: 'romantic', label: 'Romantic', emoji: '💕', desc: 'Sweet & loving' },
-  { id: 'flirty', label: 'Flirty', emoji: '😘', desc: 'Fun & playful' },
+  { id: 'friendly', label: 'Friendly', icon: 'F', desc: 'Warm and caring' },
+  { id: 'romantic', label: 'Romantic', icon: 'R', desc: 'Sweet and loving' },
+  { id: 'flirty', label: 'Flirty', icon: 'L', desc: 'Fun and playful' },
 ];
 
-function Onboarding() {
+function Onboarding({ onComplete }) {
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [preferences, setPreferences] = useState({
@@ -53,9 +53,18 @@ function Onboarding() {
         );
         
         localStorage.setItem('userPreferences', JSON.stringify(preferences));
+        localStorage.setItem('onboardingComplete', 'true');
+        
+        if (onComplete) {
+          onComplete();
+        }
         navigate('/home');
       } catch (err) {
         localStorage.setItem('userPreferences', JSON.stringify(preferences));
+        localStorage.setItem('onboardingComplete', 'true');
+        if (onComplete) {
+          onComplete();
+        }
         navigate('/home');
       } finally {
         setLoading(false);
@@ -71,9 +80,9 @@ function Onboarding() {
   };
 
   const steps = [
-    { title: 'I am a...', subtitle: 'Help us find your perfect match' },
+    { title: 'I am a...', subtitle: 'Help me get to know you better' },
     { title: 'Looking for...', subtitle: "Who's your type?" },
-    { title: 'My vibe', subtitle: 'How should Velora act with you?' },
+    { title: 'My vibe', subtitle: 'How should I act with you?' },
   ];
 
   const options = step === 0 ? genders : step === 1 ? interests : styles;
@@ -88,9 +97,19 @@ function Onboarding() {
       </div>
 
       <div className="onboarding-container">
-        <div className="onboarding-logo">
-          <span className="logo-emoji">💕</span>
-          <span className="logo-text">Velora</span>
+        <div className="onboarding-header">
+          <div className="logo-icon-small">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="url(#heartGradientSmall)">
+              <defs>
+                <linearGradient id="heartGradientSmall" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#ff6b9d"/>
+                  <stop offset="100%" stopColor="#c084fc"/>
+                </linearGradient>
+              </defs>
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+          </div>
+          <p className="onboarding-welcome">Welcome to Velora</p>
         </div>
 
         <div className="progress-dots">
@@ -126,7 +145,7 @@ function Onboarding() {
                   transition={{ delay: index * 0.1 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <span className="option-emoji">{option.emoji}</span>
+                  <div className="option-icon">{option.icon}</div>
                   <span className="option-label">{option.label}</span>
                   {option.desc && <span className="option-desc">{option.desc}</span>}
                 </motion.button>
@@ -147,7 +166,7 @@ function Onboarding() {
             ) : (
               <>
                 {step === 2 ? 'Start Chatting' : 'Continue'}
-                <span className="btn-icon">→</span>
+                <span className="btn-arrow">→</span>
               </>
             )}
           </motion.button>

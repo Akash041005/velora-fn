@@ -5,7 +5,7 @@ import './Profile.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
-function Profile() {
+function Profile({ onBack }) {
   const [user, setUser] = useState(null);
   const [preferences, setPreferences] = useState(null);
   const [editing, setEditing] = useState(false);
@@ -66,15 +66,31 @@ function Profile() {
 
       <div className="profile-container">
         <motion.div 
+          className="profile-header-bar"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <button className="back-btn" onClick={onBack}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+            </svg>
+          </button>
+          <h1>Profile</h1>
+          <div className="header-spacer"></div>
+        </motion.div>
+
+        <motion.div 
           className="profile-card"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
           <div className="avatar-section">
             <div className="avatar">
-              <span>💖</span>
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="white">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
             </div>
-            <div className="premium-badge">✨ Premium</div>
+            <div className="premium-badge">Your Match</div>
           </div>
 
           <div className="profile-fields">
@@ -169,18 +185,30 @@ function Profile() {
 
         <div className="profile-stats">
           <div className="stat-card">
-            <span className="stat-icon">💬</span>
-            <span className="stat-value">∞</span>
+            <div className="stat-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="#ff6b9d">
+                <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+              </svg>
+            </div>
+            <span className="stat-value">Infinity</span>
             <span className="stat-label">Messages</span>
           </div>
           <div className="stat-card">
-            <span className="stat-icon">💕</span>
+            <div className="stat-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="#ff6b9d">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
+            </div>
             <span className="stat-value">1</span>
             <span className="stat-label">Match</span>
           </div>
           <div className="stat-card">
-            <span className="stat-icon">✨</span>
-            <span className="stat-value">∞</span>
+            <div className="stat-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="#c084fc">
+                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+              </svg>
+            </div>
+            <span className="stat-value">Unlimited</span>
             <span className="stat-label">Super Likes</span>
           </div>
         </div>
