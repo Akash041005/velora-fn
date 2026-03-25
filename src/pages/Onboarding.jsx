@@ -7,21 +7,21 @@ import './Onboarding.css';
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 const genders = [
-  { id: 'woman', label: 'Woman', icon: 'W' },
-  { id: 'man', label: 'Man', icon: 'M' },
-  { id: 'non-binary', label: 'Non-binary', icon: 'N' },
+  { id: 'woman', label: 'Woman', icon: 'W', emoji: '💁‍♀️' },
+  { id: 'man', label: 'Man', icon: 'M', emoji: '💁' },
+  { id: 'non-binary', label: 'Non-binary', icon: 'N', emoji: '🧑' },
 ];
 
 const interests = [
-  { id: 'male', label: 'Male', icon: 'M' },
-  { id: 'female', label: 'Female', icon: 'F' },
-  { id: 'everyone', label: 'Everyone', icon: 'E' },
+  { id: 'male', label: 'Male', icon: 'M', emoji: '👨' },
+  { id: 'female', label: 'Female', icon: 'F', emoji: '👩' },
+  { id: 'everyone', label: 'Everyone', icon: 'E', emoji: '🌈' },
 ];
 
 const styles = [
-  { id: 'friendly', label: 'Friendly', icon: 'F', desc: 'Warm and caring' },
-  { id: 'romantic', label: 'Romantic', icon: 'R', desc: 'Sweet and loving' },
-  { id: 'flirty', label: 'Flirty', icon: 'L', desc: 'Fun and playful' },
+  { id: 'friendly', label: 'Friendly', icon: 'F', emoji: '🤗', desc: 'Warm & caring' },
+  { id: 'romantic', label: 'Romantic', icon: 'R', emoji: '💕', desc: 'Sweet & loving' },
+  { id: 'flirty', label: 'Flirty', icon: 'L', emoji: '😘', desc: 'Fun & playful' },
 ];
 
 function Onboarding({ onComplete }) {
@@ -80,7 +80,7 @@ function Onboarding({ onComplete }) {
   };
 
   const steps = [
-    { title: 'I am a...', subtitle: 'Help me get to know you better' },
+    { title: 'I am a...', subtitle: 'Help me get to know you' },
     { title: 'Looking for...', subtitle: "Who's your type?" },
     { title: 'My vibe', subtitle: 'How should I act with you?' },
   ];
@@ -94,12 +94,17 @@ function Onboarding({ onComplete }) {
         <div className="bg-gradient"></div>
         <div className="bg-orb bg-orb-1"></div>
         <div className="bg-orb bg-orb-2"></div>
+        <div className="floating-hearts">
+          <span className="heart heart-1"></span>
+          <span className="heart heart-2"></span>
+          <span className="heart heart-3"></span>
+        </div>
       </div>
 
       <div className="onboarding-container">
         <div className="onboarding-header">
           <div className="logo-icon-small">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="url(#heartGradientSmall)">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="url(#heartGradientSmall)">
               <defs>
                 <linearGradient id="heartGradientSmall" x1="0%" y1="0%" x2="100%" y2="100%">
                   <stop offset="0%" stopColor="#ff6b9d"/>
@@ -145,7 +150,7 @@ function Onboarding({ onComplete }) {
                   transition={{ delay: index * 0.1 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  <div className="option-icon">{option.icon}</div>
+                  <div className="option-emoji">{option.emoji}</div>
                   <span className="option-label">{option.label}</span>
                   {option.desc && <span className="option-desc">{option.desc}</span>}
                 </motion.button>
@@ -165,7 +170,7 @@ function Onboarding({ onComplete }) {
               <span className="loading-spinner"></span>
             ) : (
               <>
-                {step === 2 ? 'Start Chatting' : 'Continue'}
+                {step === 2 ? 'Start Chatting 💕' : 'Continue'}
                 <span className="btn-arrow">→</span>
               </>
             )}
